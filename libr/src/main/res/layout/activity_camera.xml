@@ -6,7 +6,15 @@
         android:layout_height="match_parent"
         android:background="#ff000000">
 
-
+        <Button
+            android:id="@+id/scanbtn"
+            android:layout_width="@dimen/_75sdp"
+            android:layout_height="@dimen/_75sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:background="@drawable/clickbtn"
+            android:text="" />
 
         <SurfaceView
             android:id="@+id/surfaceview"

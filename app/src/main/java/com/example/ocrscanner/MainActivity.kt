@@ -3,7 +3,6 @@ package com.example.ocrscanner
 import android.R.attr
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.myapplication.activity.ScanActivity
@@ -27,9 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.e("Test", "" + requestCode);
-        Log.e("Test", "" + resultCode);
-        if (requestCode == 100) {
+
+        if (resultCode == 200) {
             val result: String = data!!.getStringExtra("scanText")
             binding.text.text = result
         }

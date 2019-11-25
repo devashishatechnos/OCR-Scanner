@@ -1,7 +1,9 @@
 package com.example.myapplication.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore.Images
@@ -36,7 +38,12 @@ class ScanActivity() : AppCompatActivity() {
 
     var scanText = "No Text"
     var count = 0
+    var counter = 0
+
     var f12a: String? = null
+
+    private val sharedPrefFile = "ocrscanner"
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +52,20 @@ class ScanActivity() : AppCompatActivity() {
             binding.invalidateAll()
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        initViews()
 
+        sharedPreferences =
+            this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+
+        if (sharedPreferences.getInt("counter", 0) > 10) {
+            finish()
+        } else {
+            initViews()
+            counter++
+            val editor:SharedPreferences.Editor =  sharedPreferences.edit()
+            editor.putInt("counter",counter)
+            editor.apply()
+            editor.commit()
+        }
     }
 
     fun addNumbers(n1: Double, n2: Double): Int {
@@ -136,20 +155,20 @@ class ScanActivity() : AppCompatActivity() {
             foo(qux = { println("hello") }) // Uses both default values bar = 0 and baz = 1
             foo { println("hello") }
 
-            binding.scanbtn.setOnClickListener {
-
-                cameraSource.stop()
 
 
-                var intent = Intent()
-                intent.putExtra("scanText", scanText);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-                /* val intent = Intent(this, ResultActivity::class.java)
-                 intent.putExtra("ResultActivity", scanText)
-                 startActivity(intent)
-                 finish()*/
-            }
+         //   cameraSource.stop()
+
+
+            /* var intent = Intent()
+             intent.putExtra("scanText", scanText);
+             setResult(Activity.RESULT_OK, intent);
+             finish();*/
+            /* val intent = Intent(this, ResultActivity::class.java)
+             intent.putExtra("ResultActivity", scanText)
+             startActivity(intent)
+             finish()*/
+
 
 
 
@@ -263,10 +282,10 @@ class ScanActivity() : AppCompatActivity() {
                     sb.append("\n")
                 }
                 this.f12a = sb.toString()
-              /*  val intent2 = Intent(this, ResultActivity::class.java)
-                intent2.putExtra("ResultActivity", this.f12a)
-                startActivity(intent2)
-                finish()*/
+                /*  val intent2 = Intent(this, ResultActivity::class.java)
+                  intent2.putExtra("ResultActivity", this.f12a)
+                  startActivity(intent2)
+                  finish()*/
 
 
             }

@@ -1,26 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff000000">
 
-    <RelativeLayout
+
+    <SurfaceView
+        android:id="@+id/surfaceview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff000000">
+        android:layout_alignParentLeft="true" />
 
-
-
-        <SurfaceView
-            android:id="@+id/surfaceview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true" />
-
-        <TextView
-            android:id="@+id/scantxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="TextView" />
-    </RelativeLayout>
-</layout>
+    <TextView
+        android:id="@+id/scantxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView"
+        android:visibility="gone" />
+</RelativeLayout>

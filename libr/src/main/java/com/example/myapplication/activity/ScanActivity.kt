@@ -16,9 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.PointerIconCompat
-import androidx.databinding.DataBindingUtil
 import com.example.myapplication.R
-import com.example.myapplication.databinding.ActivityCameraBinding
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.Detector.Detections
@@ -33,7 +31,6 @@ import java.util.regex.Pattern
 
 class ScanActivity() : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCameraBinding
     lateinit var cameraSource: CameraSource
 
     var scanText = "No Text"
@@ -47,10 +44,7 @@ class ScanActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_camera)
-        binding.apply {
-            binding.invalidateAll()
-        }
+        setContentView(R.layout.activity_camera)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         sharedPreferences =
@@ -61,8 +55,8 @@ class ScanActivity() : AppCompatActivity() {
         } else {
             initViews()
             counter++
-            val editor:SharedPreferences.Editor =  sharedPreferences.edit()
-            editor.putInt("counter",counter)
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+            editor.putInt("counter", counter)
             editor.apply()
             editor.commit()
         }
@@ -99,7 +93,7 @@ class ScanActivity() : AppCompatActivity() {
                 .setAutoFocusEnabled(true)
                 .build()
 
-            binding.surfaceview.holder.addCallback(object : SurfaceHolder.Callback {
+            surfaceview.holder.addCallback(object : SurfaceHolder.Callback {
                 override fun surfaceChanged(
                     holder: SurfaceHolder?,
                     format: Int,
@@ -156,8 +150,7 @@ class ScanActivity() : AppCompatActivity() {
             foo { println("hello") }
 
 
-
-         //   cameraSource.stop()
+            //   cameraSource.stop()
 
 
             /* var intent = Intent()
@@ -193,7 +186,7 @@ class ScanActivity() : AppCompatActivity() {
                 override fun receiveDetections(detections: Detections<TextBlock>?) {
                     val detectedItems: SparseArray<*> = detections!!.detectedItems
                     if (detectedItems.size() != 0) {
-                        binding.scantxt.post(Runnable {
+                        scantxt.post(Runnable {
                             val sb = StringBuilder()
                             for (i in 0 until detectedItems.size()) {
                                 if ((detectedItems.valueAt(i) as TextBlock).value.contains("-")) {
@@ -234,8 +227,8 @@ class ScanActivity() : AppCompatActivity() {
                                     }
                                 }
                             }
-                            binding.scantxt.setText(sb.toString())
-                            scanText = binding.scantxt.text.toString()
+                            scantxt.setText(sb.toString())
+                            scanText = scantxt.text.toString()
                         })
 
                     }
@@ -255,7 +248,7 @@ class ScanActivity() : AppCompatActivity() {
             ) == 0
         ) {
             try {
-                cameraSource.start(binding.surfaceview.holder)
+                cameraSource.start(surfaceview.holder)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

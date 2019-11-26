@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         Log.e("Test", "" + requestCode);
         Log.e("Test", "" + resultCode);
-        if (requestCode == 100) {
+        if (requestCode == 100 && resultCode == -1) {
             val result: String = data!!.getStringExtra("scanText")
             binding.text.text = result
         }

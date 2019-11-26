@@ -12,6 +12,7 @@ import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -49,9 +50,12 @@ class ScanActivity() : AppCompatActivity() {
 
         sharedPreferences =
             this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        counter = sharedPreferences.getInt("counter", 0)
+        Log.e("Scan", "" + sharedPreferences.getInt("counter", 0))
 
-        if (sharedPreferences.getInt("counter", 0) > 10) {
+        if (counter > 50) {
             finish()
+            Toast.makeText(this, "Limit exhausted", Toast.LENGTH_SHORT).show()
         } else {
             initViews()
             counter++

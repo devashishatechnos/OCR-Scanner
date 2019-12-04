@@ -1,12 +1,16 @@
 package com.example.myapplication.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.SparseArray
@@ -16,7 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.PointerIconCompat
+import com.example.myapplication.BoxDetector
 import com.example.myapplication.R
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
@@ -27,6 +31,7 @@ import com.google.android.gms.vision.text.TextRecognizer
 import com.google.android.gms.vision.text.TextRecognizer.Builder
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.IOException
+import java.lang.StringBuilder
 import java.util.regex.Pattern
 
 
@@ -39,7 +44,7 @@ class ScanActivity() : AppCompatActivity() {
     var counter = 0
 
     var f12a: String? = null
-
+    var MY_CAMERA_REQUEST_CODE = 100
     private val sharedPrefFile = "ocrscanner"
     lateinit var sharedPreferences: SharedPreferences
 
@@ -53,7 +58,7 @@ class ScanActivity() : AppCompatActivity() {
         counter = sharedPreferences.getInt("counter", 0)
         Log.e("Scan", "" + sharedPreferences.getInt("counter", 0))
 
-        if (counter > 50) {
+        if (counter > 150) {
             finish()
             Toast.makeText(this, "Limit exhausted", Toast.LENGTH_SHORT).show()
         } else {
@@ -66,36 +71,34 @@ class ScanActivity() : AppCompatActivity() {
         }
     }
 
-    fun addNumbers(n1: Double, n2: Double): Int {
-        val sum = n1 + n2
-        val sumInteger = sum.toInt()
-        return sumInteger
-    }
-
-    fun main(args: Array<String>) {
-        val number1 = 12.2
-        val number2 = 3.4
-        val result: Int
-        result = addNumbers(number1, number2)
-        println("result = $result")
-    }
 
     private fun initViews() {
-        var build: TextRecognizer = Builder(applicationContext).build()
-        if (build.isOperational) {
+        var textRecognizer: TextRecognizer = TextRecognizer.Builder(applicationContext).build()
 
-            val displayMetrics = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-            val width = displayMetrics.widthPixels
-            val height = displayMetrics.heightPixels
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
 
-            cameraSource = CameraSource.Builder(applicationContext, build)
-                .setRequestedPreviewSize(width, height)
+
+        var boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
+
+        if (boxDetector.isOperational) {
+
+
+            //  surfaceview.holder.setFixedSize(width, width / 3)
+
+
+            cameraSource = CameraSource.Builder(applicationContext, boxDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedPreviewSize(width, height)
                 .setRequestedFps(ApniClass.j)
+
                 .setAutoFocusEnabled(true)
                 .build()
+
+
 
             surfaceview.holder.addCallback(object : SurfaceHolder.Callback {
                 override fun surfaceChanged(
@@ -104,6 +107,11 @@ class ScanActivity() : AppCompatActivity() {
                     width: Int,
                     height: Int
                 ) {
+                    /* cameraSource.apply {
+                         surfaceview.holder.setFixedSize(width, height)
+                         Log.e("ScanActivity1", "Width $width Height $height")
+
+                     }*/
                 }
 
 
@@ -115,19 +123,28 @@ class ScanActivity() : AppCompatActivity() {
                 override fun surfaceCreated(holder: SurfaceHolder?) {
 
                     try {
+
                         if (ContextCompat.checkSelfPermission(
-                                this@ScanActivity.applicationContext,
-                                "android.permission.CAMERA"
-                            ) != 0
+                                this@ScanActivity, Manifest.permission.CAMERA
+                            ) != PackageManager.PERMISSION_GRANTED
                         ) {
+
                             ActivityCompat.requestPermissions(
                                 this@ScanActivity,
                                 arrayOf("android.permission.CAMERA"),
-                                PointerIconCompat.TYPE_CONTEXT_MENU
+                                MY_CAMERA_REQUEST_CODE
                             )
-                            return
+
+
+                        } else if (ContextCompat.checkSelfPermission(
+                                this@ScanActivity, Manifest.permission.CAMERA
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            cameraSource.start(this@ScanActivity.surfaceview.holder)
+
                         }
-                        cameraSource.start(this@ScanActivity.surfaceview.holder)
+
+
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
@@ -136,54 +153,7 @@ class ScanActivity() : AppCompatActivity() {
 
             })
 
-            fun reformat(
-                str: String,
-                normalizeCase: Boolean = true,
-                upperCaseFirstLetter: Boolean = true,
-                divideByCamelHumps: Boolean = false,
-                wordSeparator: Char = ' '
-            ) {
-/*...*/
-            }
-
-            fun foo(bar: Int = 0, baz: Int = 1, qux: () -> Unit) { /*...*/
-            }
-
-            foo(1) { println("hello") }     // Uses the default value baz = 1
-            foo(qux = { println("hello") }) // Uses both default values bar = 0 and baz = 1
-            foo { println("hello") }
-
-
-            //   cameraSource.stop()
-
-
-            /* var intent = Intent()
-             intent.putExtra("scanText", scanText);
-             setResult(Activity.RESULT_OK, intent);
-             finish();*/
-            /* val intent = Intent(this, ResultActivity::class.java)
-             intent.putExtra("ResultActivity", scanText)
-             startActivity(intent)
-             finish()*/
-
-
-
-
-            fun main(args: Array<String>) {
-                val demo = Outer()
-                print(demo)
-            }
-
-            class Outer {
-                private val welcomeMessage: String = "Welcome Scanner"
-
-                inner class Nested {
-                    fun foo() = welcomeMessage
-                }
-            }
-
-
-            build.setProcessor(object : Detector.Processor<TextBlock> {
+            boxDetector.setProcessor(object : Detector.Processor<TextBlock> {
                 override fun release() {
                 }
 
@@ -198,7 +168,7 @@ class ScanActivity() : AppCompatActivity() {
                                         sb.append((detectedItems.valueAt(i) as TextBlock).value)
                                         sb.append("\n")
                                         Log.e("Test0", "" + i + sb)
-                                        // String regex = "^[A-Z0-9#-]+$";
+                                        // String regex = "^[A-Z0-9#-]+$"
                                         val regex = "^[A-Z0-9]{4}(-[A-Z0-9]{4}){3}"
                                         val pat = Pattern.compile(regex)
                                         Log.e("Test", "" + sb.toString().length)
@@ -224,7 +194,7 @@ class ScanActivity() : AppCompatActivity() {
                                             )
                                             setResult(Activity.RESULT_OK, intent)
                                             finish()
-                                            count++
+                                            // count++
                                             break
                                         }
                                         sb.setLength(0)
@@ -244,17 +214,49 @@ class ScanActivity() : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        i: Int, strArr: Array<String?>, iArr: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
-        if (i == 1001 && iArr[0] == 0 && ContextCompat.checkSelfPermission(
-                this,
-                "android.permission.CAMERA"
-            ) == 0
-        ) {
-            try {
-                cameraSource.start(surfaceview.holder)
-            } catch (e: IOException) {
-                e.printStackTrace()
+        super.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults
+        )
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    cameraSource.start(surfaceview.holder)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            } else {
+                if (this == null) {
+
+                    return
+                }
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.CAMERA
+                    )
+                ) {
+                    Toast.makeText(this, "Please Allow Camera Permission", Toast.LENGTH_SHORT)
+                        .show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "Please Allow Camera Permission", Toast.LENGTH_SHORT)
+                        .show()
+                    finish()
+
+                    var intent = Intent()
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    var uri = Uri.fromParts("package", applicationContext.getPackageName(), null)
+                    intent.setData(uri)
+                    startActivity(intent)
+
+                }
+
             }
         }
     }

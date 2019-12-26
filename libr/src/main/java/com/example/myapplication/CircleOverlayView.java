@@ -63,7 +63,12 @@ public class CircleOverlayView extends LinearLayout {
         paint.setTextSize(40);
         osCanvas.drawText("ATechnos", 100, getHeight() / 2 - 100, paint);
 
-        paint.setColor(Color.TRANSPARENT);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(6);
+        osCanvas.drawRect(outerRectangle, paint);
+
+        paint.setColor(Color.WHITE);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
         RectF outerRectangle2 = new RectF(24,

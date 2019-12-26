@@ -41,12 +41,13 @@ class ScanActivity() : AppCompatActivity() {
 
     var scanText = "No Text"
     var count = 0
-    var counter = 0
+    // var counter = 0
 
     var f12a: String? = null
     var MY_CAMERA_REQUEST_CODE = 100
     private val sharedPrefFile = "ocrscanner"
     lateinit var sharedPreferences: SharedPreferences
+    var arrayList: ArrayList<String> = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,20 +56,20 @@ class ScanActivity() : AppCompatActivity() {
 
         sharedPreferences =
             this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
-        counter = sharedPreferences.getInt("counter", 0)
+        //    counter = sharedPreferences.getInt("counter", 0)
         Log.e("Scan", "" + sharedPreferences.getInt("counter", 0))
 
-        if (counter > 150) {
-            finish()
-            Toast.makeText(this, "Limit exhausted", Toast.LENGTH_SHORT).show()
-        } else {
-            initViews()
-            counter++
-            val editor: SharedPreferences.Editor = sharedPreferences.edit()
-            editor.putInt("counter", counter)
-            editor.apply()
-            editor.commit()
-        }
+        /* if (counter > 150) {
+             finish()
+             Toast.makeText(this, "Limit exhausted", Toast.LENGTH_SHORT).show()
+         } else {*/
+        initViews()
+        //  counter++
+        /* val editor: SharedPreferences.Editor = sharedPreferences.edit()
+         editor.putInt("counter", counter)
+         editor.apply()
+         editor.commit()*/
+        //  }
     }
 
 
@@ -80,9 +81,18 @@ class ScanActivity() : AppCompatActivity() {
 
         val width = displayMetrics.widthPixels
         val height = displayMetrics.heightPixels
-
+        Log.e("Width123", "" + width + "  " + height)
 
         var boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
+
+
+     /*   if (width > 1080) {
+            boxDetector = BoxDetector(textRecognizer, width - 240, 200, width, height)
+        } else {
+            boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
+        }*/
+
+
 
         if (boxDetector.isOperational) {
 
@@ -172,37 +182,65 @@ class ScanActivity() : AppCompatActivity() {
                                         val regex = "^[A-Z0-9]{4}(-[A-Z0-9]{4}){3}"
                                         val pat = Pattern.compile(regex)
                                         Log.e("Test", "" + sb.toString().length)
-                                        if (pat.matcher(sb.toString().trim { it <= ' ' }.toUpperCase()).matches()
+                                        if (pat.matcher(sb.toString().trim { it <= ' ' }).matches()
                                             && sb.toString().trim { it <= ' ' }.length == ApniClass.i
                                         ) {
-                                            cameraSource.stop()
-                                            /*val intent = Intent(
-                                                this@ScanActivity,
-                                                ResultActivity::class.java
-                                            )
-                                            intent.putExtra(
-                                                "ResultActivity",
-                                                sb.toString().trim { it <= ' ' }.toUpperCase()
-                                            )
-                                            startActivity(intent)
-                                            finish()*/
+                                            Log.e("TestIN", "" + sb)
 
-                                            var intent = Intent()
-                                            intent.putExtra(
-                                                "scanText",
-                                                sb.toString().trim { it <= ' ' }.toUpperCase()
-                                            )
-                                            setResult(Activity.RESULT_OK, intent)
-                                            finish()
-                                            // count++
-                                            break
+                                            arrayList.add(sb.toString())
+
+                                            if (arrayList.size > 1) {
+                                                Log.e("TestArray0", arrayList.get(0))
+                                                Log.e("TestArray1", arrayList.get(1))
+
+                                                if (arrayList.get(0).equals(arrayList.get(1))) {
+                                                    Log.e("TestArray3", "Equal")
+                                                    if (arrayList.get(0).contains("1") || arrayList.get(
+                                                            0
+                                                        ).contains("I")
+                                                    ) {
+                                                        Log.e("Size", "" + arrayList.size)
+                                                        if (arrayList.size == 4) {
+                                                            if (arrayList.get(2).equals(
+                                                                    arrayList.get(
+                                                                        3
+                                                                    )
+                                                                )
+                                                            ) {
+                                                                if (arrayList.get(1).equals(
+                                                                        arrayList.get(2)
+                                                                    )
+                                                                ) {
+                                                                    scantxt1.text = sb.toString()
+                                                                    arrayList.clear()
+                                                                } else {
+                                                                    arrayList.clear()
+                                                                }
+
+                                                            }
+                                                        } else if (arrayList.size > 4) {
+                                                            arrayList.clear()
+                                                        }
+
+
+                                                    } else {
+                                                        scantxt1.text = sb.toString()
+                                                        arrayList.clear()
+                                                    }
+
+
+                                                } else {
+                                                    arrayList.clear()
+                                                }
+                                            }
+
+
                                         }
                                         sb.setLength(0)
                                     }
                                 }
                             }
-                            scantxt.setText(sb.toString())
-                            scanText = scantxt.text.toString()
+
                         })
 
                     }
@@ -251,7 +289,8 @@ class ScanActivity() : AppCompatActivity() {
 
                     var intent = Intent()
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    var uri = Uri.fromParts("package", applicationContext.getPackageName(), null)
+                    var uri =
+                        Uri.fromParts("package", applicationContext.getPackageName(), null)
                     intent.setData(uri)
                     startActivity(intent)
 

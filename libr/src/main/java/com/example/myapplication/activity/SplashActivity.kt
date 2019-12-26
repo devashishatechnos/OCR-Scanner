@@ -29,8 +29,8 @@ class SplashActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             Thread(Runnable {
-                Thread.sleep(2000)
-                startActivity(Intent(this, HomeActivity::class.java))
+                Thread.sleep(200)
+                startActivity(Intent(this, ScanActivity::class.java))
                 finish()
 
             }).start()

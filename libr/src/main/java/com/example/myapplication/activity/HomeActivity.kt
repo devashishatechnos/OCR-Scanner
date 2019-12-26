@@ -18,17 +18,20 @@ class HomeActivity : AppCompatActivity() {
             binding.invalidateAll()
         }
 
-        binding.ivScan.setOnClickListener {
-            startActivity(Intent(this, ScanActivity::class.java))
-        }
-
+        /*  binding.ivScan.setOnClickListener {
+              startActivity(Intent(this, ScanActivity::class.java))
+          }*/
+        startActivity(Intent(this, ScanActivity::class.java))
+        finish()
     }
 
-    fun reformat(str: String,
-                 normalizeCase: Boolean = true,
-                 upperCaseFirstLetter: Boolean = true,
-                 divideByCamelHumps: Boolean = false,
-                 wordSeparator: Char = ' ') {
+    fun reformat(
+        str: String,
+        normalizeCase: Boolean = true,
+        upperCaseFirstLetter: Boolean = true,
+        divideByCamelHumps: Boolean = false,
+        wordSeparator: Char = ' '
+    ) {
 /*...*/
     }
 

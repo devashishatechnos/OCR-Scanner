@@ -61,7 +61,7 @@ public class CircleOverlayView extends LinearLayout {
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
         paint.setTextSize(40);
-        osCanvas.drawText("ATechnos", 100, getHeight() / 2 - 100, paint);
+        osCanvas.drawText("", 100, getHeight() / 2 - 100, paint);
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.WHITE);

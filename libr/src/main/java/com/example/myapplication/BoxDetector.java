@@ -58,6 +58,7 @@ public class BoxDetector extends Detector {
                     100, byteArrayOutputStream);
         } catch (IllegalArgumentException e) {
 
+
         }
        /* } else {
             try {

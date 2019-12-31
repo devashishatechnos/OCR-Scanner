@@ -86,11 +86,11 @@ class ScanActivity() : AppCompatActivity() {
         var boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
 
 
-     /*   if (width > 1080) {
-            boxDetector = BoxDetector(textRecognizer, width - 240, 200, width, height)
-        } else {
-            boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
-        }*/
+        /*   if (width > 1080) {
+               boxDetector = BoxDetector(textRecognizer, width - 240, 200, width, height)
+           } else {
+               boxDetector = BoxDetector(textRecognizer, width - 120, 80, width, height)
+           }*/
 
 
 
@@ -195,23 +195,20 @@ class ScanActivity() : AppCompatActivity() {
 
                                                 if (arrayList.get(0).equals(arrayList.get(1))) {
                                                     Log.e("TestArray3", "Equal")
-                                                    if (arrayList.get(0).contains("1") || arrayList.get(
-                                                            0
-                                                        ).contains("I")
-                                                    ) {
+                                                    if (arrayList.get(0).contains("1") || arrayList.get(0).contains("I")) {
                                                         Log.e("Size", "" + arrayList.size)
                                                         if (arrayList.size == 4) {
-                                                            if (arrayList.get(2).equals(
-                                                                    arrayList.get(
-                                                                        3
+                                                            if (arrayList.get(2).equals(arrayList.get(3))) {
+                                                                if (arrayList.get(1).equals(arrayList.get(2))) {
+                                                                    cameraSource.stop()
+                                                                    var intent = Intent()
+                                                                    intent.putExtra(
+                                                                        "scanText",
+                                                                        sb.toString().trim { it <= ' ' }.toUpperCase()
                                                                     )
-                                                                )
-                                                            ) {
-                                                                if (arrayList.get(1).equals(
-                                                                        arrayList.get(2)
-                                                                    )
-                                                                ) {
-                                                                    scantxt1.text = sb.toString()
+                                                                    setResult(Activity.RESULT_OK, intent)
+                                                                    finish()
+                                                                  //  scantxt1.text = sb.toString()
                                                                     arrayList.clear()
                                                                 } else {
                                                                     arrayList.clear()
@@ -224,10 +221,17 @@ class ScanActivity() : AppCompatActivity() {
 
 
                                                     } else {
-                                                        scantxt1.text = sb.toString()
-                                                        arrayList.clear()
-                                                    }
 
+                                                        var intent = Intent()
+                                                        intent.putExtra(
+                                                            "scanText",
+                                                            sb.toString().trim { it <= ' ' }.toUpperCase()
+                                                        )
+                                                        setResult(Activity.RESULT_OK, intent)
+                                                        finish()
+                                                       //  scantxt1.text = sb.toString()
+                                                         arrayList.clear()
+                                                     }
 
                                                 } else {
                                                     arrayList.clear()
@@ -247,6 +251,32 @@ class ScanActivity() : AppCompatActivity() {
                 }
 
             })
+
+
+            /*  boxDetector.setProcessor(object : Detector.Processor<TextBlock> {
+                  override fun release() {
+                  }
+
+                  override fun receiveDetections(detections: Detections<TextBlock>?) {
+                      val detectedItems: SparseArray<*> = detections!!.detectedItems
+                      if (detectedItems.size() != 0) {
+                          scantxt.post(Runnable {
+                              val sb = StringBuilder()
+                              for (i in 0 until detectedItems.size()) {
+                                  sb.append((detectedItems.valueAt(i) as TextBlock).value)
+                                  sb.append("\n")
+                                  Log.e("Test0", "" + i + sb)
+                                  Log.e("Test01", "" + sb.toString().length)
+
+                                  sb.setLength(0)
+                              }
+
+                          })
+
+                      }
+                  }
+
+              })*/
 
         }
     }

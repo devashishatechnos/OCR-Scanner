@@ -29,7 +29,7 @@ public class BoxDetector extends Detector {
 
 
     public SparseArray detect(Frame frame) {
-        int width = frame.getMetadata().getWidth();
+        int width = frame.getMetadata().getWidth() ;
         int height = frame.getMetadata().getHeight();
 
        /* int width = 1280;
@@ -39,27 +39,27 @@ public class BoxDetector extends Detector {
 
 
         YuvImage yuvImage;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream;
 
         //  if (width > height) {
-        try {
-            int right = (width / 2) + (mBoxHeight / 2);
-            int left = (width / 2) - (mBoxHeight / 2);
-            int bottom = (height / 2) + (mBoxWidth / 2);
-            int top = (height / 2) - (mBoxWidth / 2);
-            Log.e("Test right", "" + right);
-            Log.e("Test left", "" + left);
-            Log.e("Test bottom", "" + bottom);
-            Log.e("Test top", "" + top);
-            yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21, width, height, null);
-            byteArrayOutputStream = new ByteArrayOutputStream();
+        //   try {
+        int right = (width / 2) + (mBoxHeight / 2);
+        int left = (width / 2) - (mBoxHeight / 2);
+        int bottom = (height / 2) + (mBoxWidth / 2);
+        int top = (height / 2) - (mBoxWidth / 2);
+        Log.e("Test right", "" + right);
+        Log.e("Test left", "" + left);
+        Log.e("Test bottom", "" + bottom);
+        Log.e("Test top", "" + top);
+        yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21, width, height, null);
+        byteArrayOutputStream = new ByteArrayOutputStream();
 
-            yuvImage.compressToJpeg(new Rect(left, top, right, bottom),
-                    100, byteArrayOutputStream);
-        } catch (IllegalArgumentException e) {
+        yuvImage.compressToJpeg(new Rect(left, 0, right, height),
+                100, byteArrayOutputStream);
+     /*   } catch (IllegalArgumentException e) {
 
 
-        }
+        }*/
        /* } else {
             try {
                 int right = (width / 2) + (mBoxHeight / 2);
@@ -96,7 +96,7 @@ public class BoxDetector extends Detector {
         Frame croppedFrame =
                 new Frame.Builder()
                         .setBitmap(bitmap)
-                        .setRotation(frame.getMetadata().getRotation())
+                       .setRotation(frame.getMetadata().getRotation())
                         .build();
 
         return mDelegate.detect(croppedFrame);

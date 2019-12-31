@@ -16,23 +16,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //    setContentView(R.layout.activity_main)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        startActivity(Intent(this, ScanActivity::class.java))
-        finish()
+        //   startActivity(Intent(this, ScanActivity::class.java))
+        //   finish()
 
         binding.button.setOnClickListener {
-            //startActivityForResult(Intent(this, ScanActivity::class.java), 100)
+            startActivityForResult(Intent(this, ScanActivity::class.java), 100)
+
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        //   Log.e("Test", "" + requestCode);
-        //   Log.e("Test", "" + resultCode);
+        Log.e("Test", "" + requestCode);
+        Log.e("Test", "" + resultCode);
         if (requestCode == 100 && resultCode == -1) {
             val result: String = data!!.getStringExtra("scanText")
+            Log.e("result", result);
+
             binding.text.text = result
         }
 
